@@ -13,3 +13,12 @@ _includes/notes_graph.json
 
 # Obsidian config
 .obsidian/
+
+# Cloudflare Workers
+.wrangler/
+node_modules/
+
+# Development files
+*.DS_Store
+.env
+.env.local

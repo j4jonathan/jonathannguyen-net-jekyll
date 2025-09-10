@@ -226,6 +226,51 @@ class ObsidianDigitalGardenSync:
             f.write('---\n\n')
             f.write(content)
 
+    def sync_home_page(self):
+    """Sync the Home.md from Obsidian vault to Jekyll index"""
+    home_file = self.obsidian_path / "Home.md"
+    if home_file.exists():
+        with open(home_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Parse frontmatter and content
+        frontmatter, body = self.parse_frontmatter(content)
+        
+        # Convert Obsidian links to Jekyll format
+        body = re.sub(
+            r'\[\[Notes/([^|]+)\|([^\]]+)\]\]',
+            lambda m: f"[[{self.filename_to_slug(m.group(1))}|{m.group(2)}]]",
+            body
+        )
+        
+        # Handle images
+        body = re.sub(
+            r'!\[\[([^\]]+)\]\]',
+            lambda m: f"![{m.group(1)}]({{{{ '/assets/images/{m.group(1)}' | relative_url }}}})",
+            body
+        )
+        
+        # Create Jekyll homepage
+        jekyll_frontmatter = {
+            'layout': 'page',
+            'title': frontmatter.get('title', 'Jonathan Nguyen'),
+            'id': 'home',
+            'permalink': '/'
+        }
+        
+        # Write to _pages/index.md
+        pages_dir = self.jekyll_path / "_pages"
+        pages_dir.mkdir(exist_ok=True)
+        
+        with open(pages_dir / "index.md", 'w', encoding='utf-8') as f:
+            f.write('---\n')
+            yaml.dump(jekyll_frontmatter, f, default_flow_style=False, allow_unicode=True)
+            f.write('---\n\n')
+            f.write(body)
+            f.write('\n\n<style>\n  .wrapper {\n    max-width: 46em;\n  }\n</style>')
+        
+        print("✅ Synced homepage from Obsidian vault")
+
 def main():
     parser = argparse.ArgumentParser(description='Sync Obsidian notes to Digital Garden Jekyll')
     parser.add_argument('--obsidian-path', 
@@ -238,7 +283,8 @@ def main():
     args = parser.parse_args()
     
     syncer = ObsidianDigitalGardenSync(args.obsidian_path, args.jekyll_path)
-    syncer.sync_all_notes()
+    syncer.sync_home_page()  # Sync homepage from Obsidian
+    syncer.sync_all_notes()  # Sync all notes
 
 if __name__ == "__main__":
     main()

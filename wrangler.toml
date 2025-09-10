@@ -1,0 +1,33 @@
+name = "jonathan-nguyen-net"
+main = "src/worker.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Static assets configuration for Jekyll site
+[assets]
+directory = "_site"
+binding = "ASSETS"
+
+# Custom domain will be configured separately
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+
+# Build configuration
+[build]
+command = "export PATH='/opt/homebrew/opt/ruby/bin:$PATH' && bundle exec jekyll build"
+
+# Development configuration
+[env.development]
+compatibility_date = "2025-01-01"
+
+[env.development.vars]
+ENVIRONMENT = "development"
+
+# Production configuration  
+[env.production]
+compatibility_date = "2025-01-01"
+
+[env.production.vars]
+ENVIRONMENT = "production"
