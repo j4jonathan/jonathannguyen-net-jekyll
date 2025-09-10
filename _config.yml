@@ -1,6 +1,11 @@
-title:               My digital garden
+title:               Jonathan Nguyen
+description:         Founder & CEO insights, startup systems, and esoterica
+author:              Jonathan Nguyen
+email:               hello@jonathannguyen.net
+url:                 https://jonathannguyen.net
+
 include:             ['_pages']
-exclude:             ['_includes/notes_graph.json']
+exclude:             ['_includes/notes_graph.json', 'README.md', 'LICENSE', 'scripts/']
 # You may need to change the base URL depending on your deploy configuration.
 baseurl:             ''
 
